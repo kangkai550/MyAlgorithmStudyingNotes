@@ -29,24 +29,35 @@ import edu.kk.sorts.MergeBU;
 import edu.kk.sorts.Quick;
 import edu.kk.sorts.Selection;
 import edu.kk.sorts.Shell;
+import edu.kk.sorts.Sort;
 
 public class SortCompare { 
 
     public static double time(String alg, Double[] a) { 
         Stopwatch sw = new Stopwatch(); 
-        if (alg.equals("Insertion"))      new Insertion().sort(a);
-        else if (alg.equals("Selection"))  new Selection().sort(a);
-        else if (alg.equals("InsertionX")) new InsertionX().sort(a);  
-        else if (alg.equals("Shell"))      new Shell().sort(a); 
-        else if (alg.equals("Merge"))      new Merge().sort(a); 
-//        else if (alg.equals("MergeX"))     new MergeX().sort(a); 
-        else if (alg.equals("MergeBU"))    new MergeBU().sort(a); 
-        else if (alg.equals("Quick"))      new Quick().sort(a); 
-//        else if (alg.equals("Quick3way"))  new Quick3way().sort(a); 
-//        else if (alg.equals("QuickX"))     new QuickX().sort(a); 
-        else if (alg.equals("Heap"))       new Heap().sort(a); 
-        else if (alg.equals("System"))     Arrays.sort(a); 
-        else throw new IllegalArgumentException("Invalid algorithm: " + alg);
+        //使用反射动态加载，减少代码量与稳定性
+        try {
+			//获得动态加载的类类型
+        	Class c = Class.forName("edu.kk.sorts." + alg);
+        	//获得实例
+        	Sort sort = (Sort) c.newInstance();
+        	sort.sort(a);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Invalid algorithm: " + alg);
+		}
+//        if (alg.equals("Insertion"))      new Insertion().sort(a);
+//        else if (alg.equals("Selection"))  new Selection().sort(a);
+//        else if (alg.equals("InsertionX")) new InsertionX().sort(a);  
+//        else if (alg.equals("Shell"))      new Shell().sort(a); 
+//        else if (alg.equals("Merge"))      new Merge().sort(a); 
+////        else if (alg.equals("MergeX"))     new MergeX().sort(a); 
+//        else if (alg.equals("MergeBU"))    new MergeBU().sort(a); 
+//        else if (alg.equals("Quick"))      new Quick().sort(a); 
+////        else if (alg.equals("Quick3way"))  new Quick3way().sort(a); 
+////        else if (alg.equals("QuickX"))     new QuickX().sort(a); 
+//        else if (alg.equals("Heap"))       new Heap().sort(a); 
+//        else if (alg.equals("System"))     Arrays.sort(a); 
+//        else throw new IllegalArgumentException("Invalid algorithm: " + alg);
         return sw.elapsedTime(); 
     } 
 
@@ -68,7 +79,7 @@ public class SortCompare {
     	System.out.println("");
         String alg1 = "Quick"; 
         String alg2 = "Heap"; 
-        int N = Integer.parseInt("1000000");
+        int N = Integer.parseInt("1000");
         int T = Integer.parseInt("100"); 
         double time1 = timeRandomInput(alg1, N, T); // Total for alg1. 
         double time2 = timeRandomInput(alg2, N, T); // Total for alg2. 
